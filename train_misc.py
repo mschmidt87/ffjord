@@ -160,16 +160,25 @@ def get_regularization(model, regularization_coeffs):
 def build_model_tabular(args, dims, regularization_fns=None):
 
     hidden_dims = tuple(map(int, args.dims.split("-")))
-
     def build_cnf():
-        diffeq = layers.ODEnet(
-            hidden_dims=hidden_dims,
-            input_shape=(dims,),
-            strides=None,
-            conv=False,
-            layer_type=args.layer_type,
-            nonlinearity=args.nonlinearity,
-        )
+        if args.layer_type == 'made':
+            diffeq = layers.ODEMADEnet(
+                hidden_dims=hidden_dims,
+                input_shape=(dims,),
+                strides=None,
+                conv=False,
+                layer_type=args.layer_type,
+                nonlinearity=args.nonlinearity,
+            )
+        else:
+            diffeq = layers.ODEnet(
+                hidden_dims=hidden_dims,
+                input_shape=(dims,),
+                strides=None,
+                conv=False,
+                layer_type=args.layer_type,
+                nonlinearity=args.nonlinearity,
+            )
         odefunc = layers.ODEfunc(
             diffeq=diffeq,
             divergence_fn=args.divergence_fn,
