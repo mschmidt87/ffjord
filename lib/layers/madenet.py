@@ -1,10 +1,10 @@
 import torch
 
-from pyro.nn import AutoRegressiveNN
+from .auto_reg_nn import AutoRegressiveNNSquash
 from .odefunc import NONLINEARITIES
 
 
-class ODEMADEnet(AutoRegressiveNN):
+class ODEMADEnet(AutoRegressiveNNSquash):
     """
     ODE Wrapper around the Pyro implementation of MADE network.
     """
@@ -21,7 +21,7 @@ class ODEMADEnet(AutoRegressiveNN):
                                          nonlinearity=NONLINEARITIES[nonlinearity])
 
     def forward(self, t, y):
-        mu, log_sigma = super(ODEMADEnet, self).forward(y)
+        mu, log_sigma = super(ODEMADEnet, self).forward(t, y)
         sigma = torch.exp(log_sigma)
         dx = sigma * y + mu
         return dx
