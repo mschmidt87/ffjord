@@ -21,6 +21,7 @@ class ODEMADEnet(AutoRegressiveNN):
                                          nonlinearity=NONLINEARITIES[nonlinearity])
 
     def forward(self, t, y):
-        mu, sigma = super(ODEMADEnet, self).forward(y)
+        mu, log_sigma = super(ODEMADEnet, self).forward(y)
+        sigma = torch.exp(log_sigma)
         dx = sigma * y + mu
         return dx
